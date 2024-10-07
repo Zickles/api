@@ -51,6 +51,17 @@ namespace Modding.Patches
         {
             ModHooks.OnSavegameClear(saveSlot);
             orig_ClearSaveFile(saveSlot, callback);
+            try
+            {
+                var path = ModdedSavePath(saveSlot);
+                
+                if (File.Exists(path)) File.Delete(path);
+                if (File.Exists(path + ".bak")) File.Delete(path + ".bak");
+            }
+            catch (Exception e)
+            {
+                Logger.APILogger.LogError(e);
+            }
             ModHooks.OnAfterSaveGameClear(saveSlot);
         }
 
